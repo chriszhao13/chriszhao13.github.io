@@ -5,7 +5,7 @@ permalink: /
 subtitle: School of Computer Science, Wuhan University
 
 profile:
-  align: left
+  align: right
   image: portrait.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
