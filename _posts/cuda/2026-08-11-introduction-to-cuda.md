@@ -8,7 +8,7 @@ featured: true
 map: true
 disqus_comments: true
 toc:
-  beginning: true
+  sidebar: left
 ---
 
 > 本节对应《CUDA C++ Programming Guide》Release 13.3 **第 1 章 Introduction，§1.1.1 The Graphics Processing Unit**，采用中英对照。
