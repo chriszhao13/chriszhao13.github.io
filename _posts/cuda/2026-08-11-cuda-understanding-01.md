@@ -7,7 +7,7 @@ tags: cuda
 featured: false
 ---
 
-> 本系列以 NVIDIA 官方 **《CUDA C++ Programming Guide》Release 13.3**（2026 年 5 月发布）为唯一权威依据，用中文逐步解读：先从基本原理建立模型，再走到最新特性，配合可执行的代码示例加深理解。
+> 本系列以 NVIDIA 官方 **[《CUDA C++ Programming Guide》Release 13.3](https://docs.nvidia.com/cuda/cuda-programming-guide/contents.html)**（2026 年 5 月发布）为唯一权威依据，用中文逐步解读：先从基本原理建立模型，再走到最新特性，配合可执行的代码示例加深理解。
 
 ## 为什么以 Programming Guide 为纲
 
@@ -15,9 +15,9 @@ GPU 与 CUDA 的资料浩如烟海，博客、教程、白皮书各有侧重，�
 
 选择它，还因为它有几点不可替代：
 
-- **概念稳定**——它讲的是**基本概念**（线程层次、内存层次、SIMT），这些几乎不随架构迭代而变化；
-- **特性最新**——它同步跟踪**最新特性**（13.3 已覆盖 Thread Block Clusters、分布式共享内存、CUDA Graphs 条件节点、设备端图启动等）；
-- **可作坐标**——它是理解其他一切资料（Best Practices、架构白皮书、技术博客）的**坐标系**。
+- **概念稳定**——它讲的是基本概念（线程层次、内存层次、SIMT），这些几乎不随架构迭代而变化；
+- **特性最新**——它同步跟踪最新特性（13.3 已覆盖 Thread Block Clusters、分布式共享内存、CUDA Graphs 条件节点、设备端图启动等）；
+- **可作坐标**——它是理解其他一切资料（Best Practices、架构白皮书、技术博客）的坐标系。
 
 ## 系列规划
 
