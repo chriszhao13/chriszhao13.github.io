@@ -4,7 +4,9 @@ title: 我所理解的 CUDA · 第 1 章：Introduction（1.1.1–1.1.3）
 date: 2026-08-11 10:00:00+0800
 description: 《CUDA C++ Programming Guide》13.3 第 1 章 Introduction 1.1.1–1.1.3 节的中英对照翻译。
 tags: cuda
-featured: false
+featured: true
+map: true
+disqus_comments: true
 toc:
   beginning: true
 ---
@@ -44,6 +46,7 @@ GPU 与 CPU 的设计目标各不相同。CPU 的设计目标是尽可能快地�
 GPU 专精于高度并行的计算，将更多晶体管（transistors）投入到数据处理单元；而 CPU 则将更多晶体管用于数据缓存（data caching）与流控制（flow control）。[图 1](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/introduction.html#from-graphics-processing-to-general-purpose-parallel-computing-gpu-devotes-more-transistors-to-data-processing) 展示了 CPU 与 GPU 芯片资源分布的一个示例。
 
 {% include figure.liquid loading="eager" path="assets/cuda101/image01.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+
 <div class="caption">
     图 1：GPU 将更多晶体管投入到数据处理
 </div>
