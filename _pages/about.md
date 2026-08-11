@@ -2,6 +2,7 @@
 layout: about
 title: about
 permalink: /
+render_with_liquid: true
 subtitle: School of Computer Science, Wuhan University
 
 profile:
