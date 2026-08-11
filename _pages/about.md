@@ -12,7 +12,7 @@ profile:
     <p>School of Computer Science</p>
     <p>Wuhan University</p>
     <p>Wuhan, Hubei, China</p>
-    <p>zhaochen13📧whu&#46;edu&#46;cn</p>
+    <p>zhaochen13✉️whu&#46;edu&#46;cn</p>
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
