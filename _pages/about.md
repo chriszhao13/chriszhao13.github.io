@@ -29,4 +29,6 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am Chen Zhao. I recently received my Ph.D. from the School of Computer Science, Wuhan University. My research interests include High-Performance Computing (HPC) and Graph Computing.
+I am Chen Zhao, a recent Ph.D. graduate from the School of Computer Science, Wuhan University. My research focuses on **High-Performance Computing (HPC)** and **Graph Computing**, where I enjoy bridging parallel systems with large-scale graph analytics.
+
+Beyond research, I am an avid cyclist who loves long rides, and a **loyal Arsenal fan for over 12 years** — COYG! ⚽
