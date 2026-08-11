@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 我所理解的 CUDA · 第 1 章：Introduction（1.1.1–1.1.3）
-date: 2026-08-25 10:00:00+0800
+date: 2026-08-11 10:00:00+0800
 description: 《CUDA C++ Programming Guide》13.3 第 1 章 Introduction 1.1.1–1.1.3 节的中英对照翻译。
 tags: cuda
 featured: false
