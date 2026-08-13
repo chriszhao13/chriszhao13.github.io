@@ -450,7 +450,6 @@ imagemagick:
     - 1400
   input_directories:
     - assets/img/
-    - assets/cuda101/
   input_formats:
     - ".jpg"
     - ".jpeg"
