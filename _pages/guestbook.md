@@ -1,11 +1,11 @@
 ---
 layout: page
-title: 留言板
+title: Guestbook
 permalink: /guestbook/
 nav: true
 nav_order: 3
-description: 欢迎留言交流
+description: Leave a message
 giscus_comments: true
 ---
 
-欢迎在这里留言。可以聊聊 GPU、HPC、图计算，或者足球和骑行，随你。
+Welcome to my guestbook. Feel free to chat about GPUs, HPC, graph computing, football, cycling, or anything else.
