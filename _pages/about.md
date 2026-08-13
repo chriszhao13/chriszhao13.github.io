@@ -32,4 +32,6 @@ I recently received my Ph.D. from the **School of Computer Science, Wuhan Univer
 
 My research focuses on **High-Performance Computing (HPC)** and **Graph Computing**, where I enjoy bridging parallel systems with large-scale graph analytics.
 
+*Lately I've been eyeing a slight pivot — maybe AI infra, or honestly whatever still lets me spend my days arguing with GPUs. Same obsession with performance, just fewer k-cores and more tensor cores (or more k-cores, who knows — my research direction is about as stable as my finishing in front of goal).*
+
 Beyond research, I play football as a **No. 6** (holding midfielder) and am an avid cyclist who loves long rides. I am also a **loyal Arsenal fan for over 12 years** — COYG! ⚽
