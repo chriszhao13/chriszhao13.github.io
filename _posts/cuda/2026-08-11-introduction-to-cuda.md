@@ -6,7 +6,7 @@ description: 《CUDA C++ Programming Guide》13.3 第 1 章 Introduction 1.1.1�
 tags: cuda
 featured: true
 map: true
-disqus_comments: true
+giscus_comments: true
 toc:
   sidebar: left
 ---
