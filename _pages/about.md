@@ -38,4 +38,4 @@ Beyond research, I play football as a No. 6, love long rides, and have been a lo
 
 If you're into GPU performance optimization, just drop me an email — happy to make you a cup of coffee and have a fun chat in WHU.
 
-Feel free to say hi on my [guestbook](/guestbook/) — 欢迎来留言板聊天！
+Feel free to say hi on my [guestbook](/guestbook/)

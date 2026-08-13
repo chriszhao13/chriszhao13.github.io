@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Guestbook
+title: guestbook
 permalink: /guestbook/
 nav: true
 nav_order: 3
