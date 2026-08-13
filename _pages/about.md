@@ -37,3 +37,5 @@ _Lately I'm not sure what to work on next — the only thing I'm sure of is perf
 Beyond research, I play football as a No. 6, love long rides, and have been a loyal Arsenal fan for over 12 years — COYG! ⚽
 
 If you're into GPU performance optimization, just drop me an email — happy to make you a cup of coffee and have a fun chat in WHU.
+
+Feel free to say hi on my [guestbook](/guestbook/) — 欢迎来留言板聊天！
