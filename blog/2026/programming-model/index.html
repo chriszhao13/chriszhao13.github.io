@@ -1,0 +1,260 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> 我所理解的 CUDA · 第 1 章：Programming Model | Chen 🙂 Zhao </title> <meta name="author" content="Chen 🙂 Zhao"> <meta name="description" content="《CUDA C++ Programming Guide》13.3 第 1 章 Introduction 1.2.1–1.2.3 节的中英对照翻译。"> <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website"> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 930px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.css" integrity="sha256-zTN0r+0OKaIv2xqeNNIYxNk0pWJ6+IqPGc1iDgVzWF0=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%BD&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=3116ba77db9ee1581d05bb3e86fbf7f1"> <link rel="canonical" href="https://chriszhao13.github.io/blog/2026/programming-model/"> <script src="/assets/js/theme.js?v=5286c3e4c334d0ecb8fc0c40ff4fa7ec"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?v=5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" integrity="sha256-q9ba7o845pMPFU+zcAll8rv+gC+fSovKsOoNQ6cynuQ=" crossorigin="anonymous"> <link rel="stylesheet" href="/assets/al_email_protect/css/email-protect.css"> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> <span class="font-weight-bold">Chen</span> 🙂 Zhao </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/guestbook/">guestbook </a> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" type="button" title="Change theme" aria-label="Change color theme"> <i class="fa-half-sun-moon" id="light-toggle-system"></i> <i class="fa-solid fa-moon" id="light-toggle-dark"></i> <i class="fa-solid fa-sun" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="row"> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top toc toc-sidebar" aria-label="Table of contents" data-toc-collapse="expanded" data-toc-collapse-depth=""></nav> </div> <div class="col-sm-9"> <div class="post"> <header class="post-header"> <h1 class="post-title">我所理解的 CUDA · 第 1 章：Programming Model</h1> <p class="post-meta"> Created on August 30, 2026 </p> <p class="post-tags"> <a href="/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/blog/tag/cuda"> <i class="fa-solid fa-hashtag fa-sm"></i> cuda</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <blockquote> <p>本节对应《CUDA C++ Programming Guide》Release 13.3 <strong>第 1 章 Programming Model，§1.2.1 Heterogeneous Systems</strong>，采用中英对照。</p> </blockquote> <blockquote> <p>This chapter introduces the CUDA programming model at a high level and separate from any language. The terminology and concepts introduced here apply to CUDA in any supported programming language. Later chapters will illustrate these concepts in C++.</p> </blockquote> <p>本章从较高层次介绍 CUDA 编程模型，并且不依赖于任何具体语言。本章引入的术语和概念适用于任何受支持的编程语言中的 CUDA。后续章节将用 C++ 来具体阐述这些概念。</p> <h2 id="121-heterogeneous-systems异构系统">1.2.1 Heterogeneous Systems（异构系统）</h2> <blockquote> <p>The CUDA programming model assumes a heterogeneous computing system, which means a system that includes both GPUs and CPUs. The CPU and the memory directly connected to it are called the host and host memory, respectively. A GPU and the memory directly connected to it are referred to as the device and device memory, respectively. In some system-on-chip (SoC) systems, these may be part of a single package. In larger systems, there may be multiple CPUs or GPUs.</p> </blockquote> <p>CUDA 编程模型假设系统为异构计算系统，即同时包含 GPU 和 CPU 的系统。CPU 及其直接相连的内存分别称为<strong>主机（host）</strong>和<strong>主机内存（host memory）</strong>；GPU 及其直接相连的内存分别称为<strong>设备（device）</strong>和<strong>设备内存（device memory）</strong>。在某些片上系统（SoC）中，这些组件可能集成于同一封装之内。在规模更大的系统中，则可能包含多个 CPU 或多个 GPU</p> <blockquote> <p>CUDA applications execute some part of their code on the GPU, but applications always start execution on the CPU. The host code, which is the code that runs on the CPU, can use CUDA APIs to copy data between the host memory and device memory, start code executing on the GPU, and wait for data copies or GPU code to complete. The CPU and GPU can both be executing code simultaneously, and best performance is usually found by maximizing utilization of both CPUs and GPUs.</p> </blockquote> <p>CUDA 应用程序将部分代码在 GPU 上执行，但程序总是从 CPU 开始运行。主机代码（即运行在 CPU 上的代码）可通过 CUDA API 在主机内存与设备内存之间复制数据、启动 GPU 上的代码执行，并等待数据拷贝或 GPU 代码完成。CPU 与 GPU 可以同时执行各自的代码，而最佳性能通常通过最大化 CPU 与 GPU 的利用率来获得。</p> <blockquote> <p>The code an application executes on the GPU is referred to as device code, and a function that is invoked for execution on the GPU is, for historical reasons, called a kernel. The act of starting a kernel running is called launching the kernel. A kernel launch can be thought of as starting many threads executing the kernel code in parallel on the GPU. GPU threads operate similarly to threads on CPUs, though there are some differences important to both correctness and performance that will be covered in later sections (see Section 3.2.2.1.1).</p> </blockquote> <p>应用程序在 GPU 上执行的代码称为<strong>设备代码（device code）</strong>；出于历史原因，被调用到 GPU 上执行的函数被称为<strong>内核（kernel）</strong>。启动一个内核运行的行为称为<strong>启动内核（launching the kernel）</strong>。可以把内核启动理解为：让大量线程在 GPU 上并行执行该内核代码。GPU 线程的运作方式与 CPU 线程类似，不过二者存在一些对正确性和性能都很重要的差异，这些差异将在后续章节中介绍（参见 <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html#advanced-kernels-independent-thread-scheduling" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html#advanced-kernels-independent-thread-scheduling</a>）。(注：什么叫正确性的差异？)</p> <hr> <h2 id="122-gpu-hardware-modelgpu-硬件模型">1.2.2 GPU Hardware Model（GPU 硬件模型）</h2> <blockquote> <p>Like any programming model, CUDA relies on a conceptual model of the underlying hardware. For the purposes of CUDA programming, the GPU can be considered to be a collection of Streaming Multiprocessors (SMs) which are organized into groups called Graphics Processing Clusters (GPCs). Each SM contains a local register file, a unified data cache, and a number of functional units that perform computations. The unified data cache provides the physical resources for shared memory and L1 cache. The allocation of the unified data cache to L1 and shared memory can be configured at runtime. The sizes of different types of memory and the number of functional units within an SM can vary across GPU architectures.</p> </blockquote> <p>与任何编程模型一样，CUDA 也建立在底层硬件的一个概念模型之上（CUDA 的抽象是对硬件的一种简化视角，方便程序员不关心具体微架构细节也能编程）。就 CUDA 编程而言，可以把 GPU 看作一组<strong>流式多处理器（Streaming Multiprocessors，简称 SM）</strong>的集合，这些 SM 被组织成称为<strong>图形处理簇（Graphics Processing Clusters，简称 GPC）</strong>的分组。每个 SM 包含一个本地寄存器文件、一个统一数据缓存，以及若干执行计算的功能单元。统一数据缓存为共享内存和 L1 缓存提供物理资源。<strong>统一数据缓存在 L1 与共享内存之间的分配比例可以在运行时配置</strong>。不同类型内存的容量以及 SM 内功能单元的数量会因 GPU 架构而异。</p> <blockquote> <p>Note: The actual hardware layout of a GPU or the way it physically carries out the execution of the programming model may vary. These differences do not affect correctness of software written using the CUDA programming model.</p> </blockquote> <p><strong>注</strong>：GPU 的实际硬件布局，或它在物理层面执行该编程模型的具体方式，可能会有所不同。但这些差异不影响使用 CUDA 编程模型编写的软件的正确性。</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/cuda101/image02-480.webp 480w,/assets/img/cuda101/image02-800.webp 800w,/assets/img/cuda101/image02-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/cuda101/image02.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 图 2：GPU 包含许多流式多处理器（SM），每个 SM 内部又包含大量功能单元。图形处理簇（GPC）是 SM 的集合。一个 GPU 由一组连接到 GPU 内存的 GPC 组成。CPU 通常具有多个核心，以及一个连接到系统内存的内存控制器。CPU 与 GPU 之间通过诸如 PCIe 或 NVLink 之类的互连进行连接。 </div> <hr> <h3 id="1221-thread-blocks-and-grids">1.2.2.1. Thread Blocks and Grids</h3> <blockquote> <p>When an application launches a kernel, it does so with many threads, often millions of threads. These threads are organized into blocks. A block of threads is referred to, perhaps unsurprisingly, as a thread block. Thread blocks are organized into a grid. All the thread blocks in a grid have the same size and dimensions. Figure 3 shows an illustration of a grid of thread blocks.</p> </blockquote> <p>当应用程序启动一个内核时，会同时启动大量线程，通常多达数百万个。这些线程被组织成<strong>块（block）</strong>。一个线程块被称为<strong>线程块（thread block）</strong>—— 这个名字或许并不令人意外。线程块进一步被组织成<strong>网格（grid）</strong>。一个网格中的所有线程块具有相同的大小和维度。图 3 展示了一个由线程块组成的网格示意图。</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/cuda101/image03-480.webp 480w,/assets/img/cuda101/image03-800.webp 800w,/assets/img/cuda101/image03-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/cuda101/image03.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 图 3：线程块网格。每个箭头代表一个线程（箭头数量并不代表实际线程数量）。 </div> <blockquote> <p>Thread blocks and grids may be 1, 2, or 3 dimensional. These dimensions can simplify mapping of individual threads to units of work or data items.</p> </blockquote> <p>线程块和网格可以是一维、二维或三维的。这些维度可以简化将单个线程映射到工作单元或数据项的过程。</p> <blockquote> <p>When a kernel is launched, it is launched using a specific execution configuration which specifies the grid and thread block dimensions. The execution configuration may also include optional parameters such as cluster size, stream, and SM configuration settings, which will be introduced in later sections.</p> </blockquote> <p>启动内核时，需要使用一个特定的<strong>执行配置（execution configuration）</strong>，其中指定了网格和线程块的维度。执行配置还可以包含一些可选参数，例如<strong>簇大小（cluster size）</strong>、<strong>流（stream）</strong>以及 <strong>SM 配置设置</strong>等，这些内容将在后续章节中介绍。</p> <p>注：<strong>“cluster size”</strong> → “簇大小”，指 thread block cluster（线程块簇），这是 Hopper 架构引入的新特性，允许多个 block 组成一个 cluster 协同执行，共享分布式共享内存。属于较新的进阶内容。</p> <blockquote> <p>Using built-in variables, each thread executing the kernel can determine its location within its containing block and the location of its block within the containing grid. A thread can also use these built-in variables to determine the dimensions of the thread blocks and the grid on which the kernel was launched. This gives each thread a unique identity among all the threads running the kernel. This identity is frequently used to determine what data or operations a thread is responsible for.</p> </blockquote> <p>通过使用内置变量，执行内核的每个线程都可以确定自己在所属线程块中的位置，以及其所属线程块在所属网格中的位置。线程还可以利用这些内置变量确定内核启动时所使用的线程块和网格的维度。这使得每个线程在所有运行该内核的线程中都拥有一个唯一标识。该标识通常用于确定一个线程负责处理哪些数据或执行哪些操作。</p> <blockquote> <p>All threads of a thread block are executed in a single SM. This allows threads within a thread block to communicate and synchronize with each other efficiently. Threads within a thread block all have access to the on-chip shared memory, which can be used for exchanging information between threads of a thread block.</p> </blockquote> <p>一个线程块中的所有线程都在<strong>同一个 SM 上执行</strong>。这使得线程块内的线程能够高效地相互通信和同步。线程块内的所有线程都可以访问<strong>片上共享内存（on-chip shared memory）</strong>，该内存可用于线程块内线程之间交换信息。</p> <blockquote> <p>A grid may consist of millions of thread blocks, while the GPU executing the grid may have only tens or hundreds of SMs. All threads of a thread block are executed by a single SM and, in most cases [1], run to completion on that SM. There is no guarantee of scheduling between thread blocks, so a thread block cannot rely on results from other thread blocks, as they may not be able to be scheduled until that thread block has completed. Figure 4 shows an example of how thread blocks from a grid are assigned to an SM.</p> </blockquote> <p>一个网格可能包含数百万个线程块，而执行该网格的 GPU 可能只有几十个或上百个 SM。一个线程块的所有线程都由同一个 SM 执行，并且在大多数情况下 [1] 会在该 SM 上运行至结束。线程块之间的调度没有任何保证，因此一个线程块不能依赖其他线程块的结果 —— 因为那些线程块可能要等到当前线程块完成后才能被调度。图 4 展示了网格中的线程块如何被分配到 SM 上的一个示例。</p> <p>[1] In certain situations when using features such as <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/dynamic-parallelism.html#cuda-dynamic-parallelism" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/dynamic-parallelism.html#cuda-dynamic-parallelism</a> , a thread block may be suspended to memory. This means the state of the SM is stored to a system-managed area of GPU memory and the SM is freed to execute other thread blocks. This is similar to context swapping on CPUs. This is not common.</p> <p>[1] 在某些情况下，当使用诸如<strong>动态并行（dynamic parallelism）</strong>（<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/dynamic-parallelism.html#cuda-dynamic-parallelism" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/dynamic-parallelism.html#cuda-dynamic-parallelism</a>）等特性时，一个线程块可能会被<strong>挂起到内存（suspended to memory）</strong>。这意味着该 SM 的状态被保存到 GPU 内存中由系统管理的区域，同时该 SM 被释放出来以执行其他线程块。这类似于 CPU 上的<strong>上下文切换（context swapping）</strong>。这种情况并不常见。</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/cuda101/image04-480.webp 480w,/assets/img/cuda101/image04-800.webp 800w,/assets/img/cuda101/image04-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/cuda101/image04.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 图 4：每个 SM 有一个或多个活跃的线程块。在本示例中，每个 SM 同时调度了三个线程块。网格中的线程块以何种顺序分配到各个 SM，没有任何保证。 </div> <blockquote> <p>The CUDA programming model enables arbitrarily large grids to run on GPUs of any size, whether it has only one SM or thousands of SMs. To achieve this, the CUDA programming model, with some exceptions, requires that there be no data dependencies between threads in different thread blocks. That is, a thread should not depend on results from or synchronize with a thread in a different thread block of the same grid. All the threads within a thread block run on the same SM at the same time. Different thread blocks within the grid are scheduled among the available SMs and may be executed in any order. In short, the CUDA programming model requires that it be possible to execute thread blocks in any order, in parallel or in series.</p> </blockquote> <p>CUDA 编程模型使得任意大小的网格都能在任何规模的 GPU 上运行 —— 无论该 GPU 只有一个 SM，还是拥有数千个 SM。为了实现这一点，CUDA 编程模型（除少数例外情况外）要求<strong>不同线程块中的线程之间不存在数据依赖</strong>。也就是说，一个线程不应依赖同一网格中另一个线程块内线程的结果，也不应与之同步。一个线程块内的所有线程同时在同一个 SM 上运行。网格中的不同线程块被调度到可用的 SM 上，并且可以以任意顺序执行。简而言之，CUDA 编程模型要求：线程块必须能够以任意顺序执行，无论是并行执行还是串行执行。</p> <h3 id="12211-thread-block-clusters">1.2.2.1.1. Thread Block Clusters</h3> <blockquote> <p>In addition to thread blocks, GPUs with compute capability 9.0 and higher have an optional level of grouping called clusters. Clusters are a group of thread blocks which, like thread blocks and grids, can be laid out in 1, 2, or 3 dimensions. <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#figure-thread-block-clusters" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#figure-thread-block-clusters</a> illustrates a grid of thread blocks that is also organized into clusters. Specifying clusters does not change the grid dimensions or the indices of a thread block within a grid.</p> </blockquote> <p>除线程块之外，计算能力（compute capability）为 9.0 及更高版本的 GPU 还提供了一个可选的分组层级，称为<strong>簇（cluster）</strong>。簇是一组线程块的集合，与线程块和网格一样，也可以按一维、二维或三维布局。<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#figure-thread-block-clusters" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#figure-thread-block-clusters</a> 展示了一个同时被组织为簇的线程块网格示意图。指定簇并不会改变网格的维度，也不会改变线程块在网格中的索引。</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/cuda101/image05-480.webp 480w,/assets/img/cuda101/image05-800.webp 800w,/assets/img/cuda101/image05-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/cuda101/image05.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 图 5：当指定了簇时，线程块在网格中仍处于原来的位置，但同时也拥有其在所属簇中的位置。 </div> <blockquote> <p>Specifying clusters groups adjacent thread blocks into clusters and provides some additional opportunities for synchronization and communication at the cluster level. Specifically, all thread blocks in a cluster are executed in a single GPC. Figure 6 shows how thread blocks are scheduled to SMs in a GPC when clusters are specified. Because the thread blocks are scheduled simultaneously and within a single GPC, threads in different blocks but within the same cluster can communicate and synchronize with each other using software interfaces provided by Cooperative Groups. Threads in clusters can access the shared memory of all blocks in the cluster, which is referred to as distributed shared memory.The maximum size of a cluster is hardware dependent and varies between devices.</p> </blockquote> <p>指定簇会将相邻的线程块分组到各个簇中，并在簇级别提供一些额外的同步与通信机会。具体而言，一个簇中的所有线程块都在<strong>同一个 GPC 内执行</strong>。<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#thread-block-scheduling-with-clusters" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html#thread-block-scheduling-with-clusters</a> 展示了指定簇时，线程块如何被调度到一个 GPC 内的各个 SM 上。由于这些线程块是同时被调度的，且位于同一个 GPC 内，因此<strong>不同 block 但属于同一簇的线程</strong>可以通过 <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-cooperative-groups" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-cooperative-groups</a> 提供的软件接口相互通信和同步。簇中的线程可以访问该簇内所有 block 的共享内存，这被称为<strong>分布式共享内存（distributed shared memory）</strong>（<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-distributed-shared-memory" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-distributed-shared-memory</a>）。簇的最大大小取决于硬件，因设备而异。</p> <blockquote> <p>Figure 6 illustrates the how thread blocks within a cluster are scheduled simultaneously on SMs within a GPC. Thread blocks within a cluster are always adjacent to each other within the grid.</p> </blockquote> <p>图 6 展示了一个簇内的线程块如何同时被调度到一个 GPC 内的各个 SM 上。一个簇内的线程块在网格中总是彼此相邻的。</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/cuda101/image06-480.webp 480w,/assets/img/cuda101/image06-800.webp 800w,/assets/img/cuda101/image06-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/cuda101/image06.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 图 6：当指定簇时，一个簇内的线程块被同时调度到一个 GPC 内的各个 SM 上。一个簇内的线程块在网格中总是彼此相邻的。 </div> <h3 id="1222-warps-and-simt">1.2.2.2. Warps and SIMT</h3> <blockquote> <p>Within a thread block, threads are organized into groups of 32 threads called warps. A warp executes the kernel code in a Single-Instruction Multiple-Threads (SIMT) paradigm. In SIMT, all threads in the warp are executing the same kernel code, but each thread may follow different branches through the code. That is, though all threads of the program execute the same code, threads do not need to follow the same execution path.</p> </blockquote> <p>在线程块内部，线程被组织成由 32 个线程组成的组，称为<strong>线程束（warp）</strong>。一个 warp 以<strong>单指令多线程（Single-Instruction Multiple-Threads，简称 SIMT）</strong>范式执行内核代码。在 SIMT 中，warp 内的所有线程执行同一份内核代码，但每个线程可能在代码中走不同的分支。也就是说，尽管程序的所有线程执行同一份代码，但线程不必遵循相同的执行路径。</p> <blockquote> <p>When threads are executed by a warp, they are assigned a warp lane. Warp lanes are numbered 0 to 31 and threads from a thread block are assigned to warps in a predictable fashion detailed in Hardware Multithreading.</p> </blockquote> <p>当线程由一个 warp 执行时，它们会被分配一个 <strong>warp lane（warp 通道）</strong>。Warp lane 的编号为 0 到 31，线程块中的线程以一种可预测的方式被分配到各个 warp 中，具体方式详见 “硬件多线程（Hardware Multithreading）” 章节。</p> <blockquote> <p>All threads in the warp execute the same instruction simultaneously. If some threads within a warp follow a control flow branch in execution while others do not, the threads which do not follow the branch will be masked off while the threads which follow the branch are executed. For example, if a conditional is only true for half the threads in a warp, the other half of the warp would be masked off while the active threads execute those instructions. This situation is illustrated in Figure 7. When different threads in a warp follow different code paths, this is sometimes called warp divergence. It follows that utilization of the GPU is maximized when threads within a warp follow the same control flow path.</p> </blockquote> <p>Warp 中的所有线程同时执行同一条指令。如果 warp 内的某些线程在执行中走了某个控制流分支，而其他线程没有，那么在执行该分支的指令时，没有走该分支的线程会被<strong>屏蔽（masked off）</strong>。例如，如果一个条件只对 warp 中一半的线程为真，那么在活跃线程执行这些指令时，warp 的另一半会被屏蔽。这种情况如 图 7 所示。当 warp 内的不同线程走不同的代码路径时，这种情况有时被称为 <strong>warp 发散（warp divergence）</strong>。由此可知，当 warp 内的线程走相同的控制流路径时，GPU 的利用率最高。</p> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/cuda101/image07-480.webp 480w,/assets/img/cuda101/image07-800.webp 800w,/assets/img/cuda101/image07-1400.webp 1400w," type="image/webp" sizes="95vw"></source> <img src="/assets/img/cuda101/image07.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" data-zoomable="" loading="eager" onerror="this.onerror=null; document.querySelectorAll('.responsive-img-srcset').forEach(function (n) { n.remove(); });"> </picture> </figure> <div class="caption"> 图 7：在本示例中，只有线程索引为偶数的线程执行 if 语句的主体，在执行该主体时，其余线程被屏蔽。 </div> <blockquote> <p>In the SIMT model, all threads in a warp progress through the kernel in lock step. Hardware execution may differ. See the sections on Independent Thread Execution for more information on where this distinction is important. Exploiting knowledge of how warp execution is actually mapped to real hardware is discouraged. The CUDA programming model and SIMT say that all threads in a warp progress through the code together. Hardware may optimize masked lanes in ways that are transparent to the program so long as the programming model is followed. If the program violates this model, this can result in undefined behavior that can be different in different GPU hardware.</p> </blockquote> <p>在 SIMT 模型中，warp 内的所有线程以<strong>锁步（lock step）</strong>方式推进内核的执行。硬件的实际执行方式可能与此不同。关于这一区别在哪些情况下很重要，更多信息请参见 <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html#advanced-kernels-independent-thread-scheduling" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html#advanced-kernels-independent-thread-scheduling</a> 章节。<strong>不建议</strong>利用 “warp 执行实际上如何映射到真实硬件” 的知识来编程。CUDA 编程模型和 SIMT 规定：warp 内的所有线程共同推进代码执行。只要遵循编程模型，硬件可能以对程序透明的方式优化被屏蔽的 lane。如果程序违反了这一模型，可能导致<strong>未定义行为（undefined behavior）</strong>，且在不同的 GPU 硬件上表现可能不同。</p> <blockquote> <p>While it is not necessary to consider warps when writing CUDA code, understanding the warp execution model is helpful in understanding concepts such as global memory coalescing and shared memory bank access patterns. Some advanced programming techniques use specialization of warps within a thread block to limit thread divergence and maximize utilization. This and other optimizations make use of the knowledge that threads are grouped into warps when executing.</p> </blockquote> <p>虽然编写 CUDA 代码时<strong>不必</strong>考虑 warp，但理解 warp 执行模型有助于理解诸如 <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-coalesced-global-memory-access" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-coalesced-global-memory-access</a> （合并的全局内存访问）和 <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-shared-memory-access-patterns" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#writing-cuda-kernels-shared-memory-access-patterns</a> （共享内存访问模式）等概念。一些高级编程技术会在线程块内对 warp 进行<strong>专门化（specialization）</strong>，以限制线程发散并最大化利用率。这类优化以及其他优化都利用了 “线程在执行时被分组为 warp” 这一知识。</p> <blockquote> <p>One implication of warp execution is that thread blocks are best specified to have a total number of threads which is a multiple of 32. It is legal to use any number of threads, but when the total is not a multiple of 32, the last warp of the thread block will have some lanes that are unused throughout execution. This will likely lead to suboptimal functional units utilization and memory access for that warp.</p> </blockquote> <p>Warp 执行的一个推论是：线程块的总线程数<strong>最好指定为 32 的倍数</strong>。使用任意数量的线程都是合法的，但当总数不是 32 的倍数时，线程块的最后一个 warp 会有一些 lane 在整个执行过程中未被使用。这可能导致该 warp 的功能单元利用率和内存访问效率不佳。</p> <blockquote> <p>SIMT is often compared to Single Instruction Multiple Data (SIMD) parallelism, but there are some important differences. In SIMD, execution follows a single control flow path, while in SIMT, each thread is allowed to follow its own control flow path. Because of this, SIMT does not have a fixed data-width like SIMD. A more detailed discussion of SIMT can be found in SIMT Execution Model.</p> </blockquote> <p>SIMT 常被拿来与<strong>单指令多数据（SIMD）</strong>并行相比较，但二者存在一些重要区别。在 SIMD 中，执行遵循<strong>单一控制流路径</strong>；而在 SIMT 中，每个线程都被允许走<strong>自己的控制流路径</strong>。正因如此，SIMT 不像 SIMD 那样具有固定的数据宽度。关于 SIMT 更详细的讨论可参见 <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html#advanced-kernels-hardware-implementation-simt-architecture" rel="external nofollow noopener" target="_blank">https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html#advanced-kernels-hardware-implementation-simt-architecture</a> 。</p> <h3 id="1223-tile-programming-in-cuda">1.2.2.3. Tile Programming in CUDA</h3> </div> </article> <br> <hr> <br> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <ul class="list-disc pl-7 my-3 space-y-2 marker:text-[var(--global-theme-color)]"> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/cluster-launch-control/">我所理解的 CUDA · 第 4 章：Work Stealing with Cluster Launch Control</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/introduction-to-cuda/">我所理解的 CUDA · 第 1 章：Introduction</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2026/cuda-understanding-01/">我所理解的 CUDA · 开篇</a> </li> </ul> <div id="giscus_thread" style="max-width: 930px; margin: 0 auto;"> <br> <script>
+    (function setupGiscus() {
+      function determineGiscusTheme() {
+        var theme = localStorage.getItem("theme") || document.documentElement.getAttribute("data-theme") || "system";
+if (theme === "dark") return "dark";
+if (theme === "light") return "light";
+var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+return prefersDark ? "dark" : "light";
+
+      }
+
+      var giscusTheme = determineGiscusTheme();
+      var attrs = {
+        src: "https://giscus.app/client.js",
+        "data-repo": "chriszhao13/chriszhao13.github.io",
+        "data-repo-id": "R_kgDOTzFqoQ",
+        "data-category": "Announcements",
+        "data-category-id": "DIC_kwDOTzFqoc4DDIVH",
+        "data-mapping": "title",
+        "data-strict": "0",
+        "data-reactions-enabled": "1",
+        "data-emit-metadata": "0",
+        "data-input-position": "bottom",
+        "data-theme": giscusTheme,
+        "data-lang": "en",
+        crossorigin: "anonymous",
+        async: true
+      };
+
+      var giscusScript = document.createElement("script");
+      Object.entries(attrs).forEach(function(entry) { giscusScript.setAttribute(entry[0], entry[1]); });
+      var host = document.getElementById("giscus_thread");
+      if (host) host.appendChild(giscusScript);
+    })();
+  </script> <noscript> Please enable JavaScript to view the <a href="http://giscus.app/?ref_noscript" rel="external nofollow noopener" target="_blank">comments powered by giscus.</a> </noscript> </div> </div> </div> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Chen 🙂 Zhao. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="external nofollow noopener">Unsplash</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js" integrity="sha256-MgH13bFTTNqsnuEoqNPBLDaqxjGH+lCpqrukmXc8Ppg=" crossorigin="anonymous"></script> <script defer src="/assets/al_charts/js/leaflet-setup.js" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script defer src="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.min.js" integrity="sha256-lo/r+jQ81wWrxdIiiiEEd538z4+dTJTt+leOuAS7GCw=" crossorigin="anonymous"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "about",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-blog",
+          title: "blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "nav-publications",
+          title: "publications",
+          description: "publications by categories in reversed chronological order. generated by jekyll-scholar.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
+        },{id: "nav-guestbook",
+          title: "guestbook",
+          description: "Leave a message",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/guestbook/";
+          },
+        },{id: "post-我所理解的-cuda-第-4-章-work-stealing-with-cluster-launch-control",
+        
+          title: "我所理解的 CUDA · 第 4 章：Work Stealing with Cluster Launch Control",
+        
+        description: "《CUDA C++ Programming Guide》13.3 §4.12 Work Stealing with Cluster Launch Control 的中英对照翻译，附工作窃取原理剖析与可直接编译运行的完整代码（Blackwell sm_120 实测）。",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/cluster-launch-control/";
+          
+        },
+      },{id: "post-我所理解的-cuda-第-1-章-programming-model",
+        
+          title: "我所理解的 CUDA · 第 1 章：Programming Model",
+        
+        description: "《CUDA C++ Programming Guide》13.3 第 1 章 Introduction 1.2.1–1.2.3 节的中英对照翻译。",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/programming-model/";
+          
+        },
+      },{id: "post-我所理解的-cuda-第-1-章-introduction",
+        
+          title: "我所理解的 CUDA · 第 1 章：Introduction",
+        
+        description: "《CUDA C++ Programming Guide》13.3 第 1 章 Introduction 1.1.1–1.1.3 节的中英对照翻译。",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/introduction-to-cuda/";
+          
+        },
+      },{id: "post-我所理解的-cuda-开篇",
+        
+          title: "我所理解的 CUDA · 开篇",
+        
+        description: "一个以 CUDA C++ Programming Guide Release 13.3 为纲，从基本原理到最新特性逐步深入的 CUDA 学习系列。",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/cuda-understanding-01/";
+          
+        },
+      },{id: "books-the-godfather",
+          title: 'The Godfather',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/the_godfather/";
+            },},{id: "news-i-received-my-ph-d-from-the-school-of-computer-science-wuhan-university-tada-sparkles",
+          title: 'I received my Ph.D. from the School of Computer Science, Wuhan University. <img class="emoji" title=":tada:" alt=":tada:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f389.png" height="20" width="20">...',
+          description: "",
+          section: "News",},{id: "news-our-paper-histcore-scalable-k-core-decomposition-on-gpus-with-locality-aware-computation-is-now-online-at-icde-2026-tada-sparkles",
+          title: 'Our paper **HistCore: Scalable $k$-Core Decomposition on GPUs with Locality-Aware Computation** is now...',
+          description: "",
+          section: "News",},{id: "projects-project-1",
+          title: 'project 1',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/1_project/";
+            },},{id: "projects-project-2",
+          title: 'project 2',
+          description: "a project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/2_project/";
+            },},{id: "projects-project-3-with-very-long-name",
+          title: 'project 3 with very long name',
+          description: "a project that redirects to another website",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/3_project/";
+            },},{id: "projects-project-4",
+          title: 'project 4',
+          description: "another without an image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/4_project/";
+            },},{id: "projects-project-5",
+          title: 'project 5',
+          description: "a project with a background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/5_project/";
+            },},{id: "projects-project-6",
+          title: 'project 6',
+          description: "a project with no image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/6_project/";
+            },},{id: "projects-project-7",
+          title: 'project 7',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/7_project/";
+            },},{id: "projects-project-8",
+          title: 'project 8',
+          description: "an other project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/8_project/";
+            },},{id: "projects-project-9",
+          title: 'project 9',
+          description: "another project with an image 🎉",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/9_project/";
+            },},{id: "teachings-data-science-fundamentals",
+          title: 'Data Science Fundamentals',
+          description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/data-science-fundamentals/";
+            },},{id: "teachings-introduction-to-machine-learning",
+          title: 'Introduction to Machine Learning',
+          description: "This course provides an introduction to machine learning concepts, algorithms, and applications. Students will learn about supervised and unsupervised learning, model evaluation, and practical implementations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-to-machine-learning/";
+            },},{
+        id: 'social-cv',
+        title: 'CV',
+        section: 'Socials',
+        handler: () => {
+          window.open("/assets/pdf/example_pdf.pdf", "_blank");
+        },
+      },{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:%7A%68%61%6F%63%68%65%6E%31%33@%77%68%75.%65%64%75.%63%6E", "_blank");
+        },
+      },{
+        id: 'social-inspire',
+        title: 'Inspire HEP',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://inspirehep.net/authors/1010907", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
+        },
+      },{
+        id: 'social-custom_social',
+        title: 'Custom_social',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.alberteinstein.com/", "_blank");
+        },
+      },{
+      id: 'light-theme',
+      title: 'Change theme to light',
+      description: 'Change the theme of the site to Light',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("light");
+      },
+    },
+    {
+      id: 'dark-theme',
+      title: 'Change theme to dark',
+      description: 'Change the theme of the site to Dark',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("dark");
+      },
+    },
+    {
+      id: 'system-theme',
+      title: 'Use system default theme',
+      description: 'Change the theme of the site to System Default',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("system");
+      },
+    },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> <script defer src="/assets/al_email_protect/js/email-protect.js"></script> </body> </html>
